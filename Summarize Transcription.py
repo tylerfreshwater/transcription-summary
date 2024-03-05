@@ -2,7 +2,7 @@ import re
 import openai
 
 # Set your OpenAI API key here
-openai.api_key = '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'
+openai.api_key = 'YOUR-API-KEY-HERE'
 
 def segment_transcript(transcript, max_chars=5000):
     sentence_endings = re.compile(r'[.!?]\s', re.MULTILINE)
