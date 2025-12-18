@@ -2,14 +2,16 @@
  * summarize_by_chunks_responses.js
  *
  * Node.js (ESM) script that:
- *  1) Splits a large transcript into speaker/paragraph-aware chunks,
- *  2) Summarizes each chunk with the Responses API (gpt-5.2),
- *  3) Enforces a minimum per-chunk summary length (characters) with a safe “expand without new facts” pass,
- *  4) Checkpoints each part to disk so crashes/rate limits don’t lose progress,
- *  5) Combines parts into combined_summary.txt at the end (or on resume).
+ * 1) Splits a large transcript into speaker/paragraph-aware chunks,
+ * 2) Summarizes each chunk with the Responses API (gpt-5.2),
+ * 3) Enforces a minimum per-chunk summary length (characters) with a safe “expand without new facts” pass,
+ * 4) Checkpoints each part to disk so crashes/rate limits don’t lose progress,
+ * 5) Combines parts into combined_summary.txt at the end (or on resume).
  *
- * Environment:
- *   OPENAI_API_KEY="..."
+ * NOTE: This script is pre-configured for Dungeons & Dragons sessions. 
+ * For other use cases (meetings, interviews, etc.), please update the SYSTEM_PROMPT.
+ * * Environment:
+ * OPENAI_API_KEY="..."
  */
 
 import fs from "fs";
@@ -30,10 +32,8 @@ if (!OPENAI_API_KEY) {
 
 // === INPUT FILE (EDIT THIS) ===
 // Can be relative to this script, or absolute.
-// Windows-safe absolute example:
-const INPUT_TRANSCRIPT_PATH = String.raw`C:\Users\tyler\Desktop\Transcribe\Batch_Summarizer\transcription - session 7-8-25.txt`;
-// Relative example (uncomment to use):
-// const INPUT_TRANSCRIPT_PATH = "transcription - session 5-26-25.txt";
+// Use String.raw`C:\path\to\file.txt` for Windows absolute paths.
+const INPUT_TRANSCRIPT_PATH = "path/to/your/transcript.txt";
 
 const MODEL = "gpt-5.2";
 
@@ -125,7 +125,7 @@ function exists(filePath) {
 
 /**
  * Detect speaker tags like:
- *   "SPEAKER: Hopo"
+ * "SPEAKER: Hopo"
  */
 function looksLikeSpeakerLine(line) {
   return /^SPEAKER:\s*\S+/i.test(line.trim());
@@ -133,9 +133,9 @@ function looksLikeSpeakerLine(line) {
 
 /**
  * Normalize:
- *   SPEAKER: Hopo
+ * SPEAKER: Hopo
  * into:
- *   Hopo:
+ * Hopo:
  */
 function normalizeSpeakerTags(text) {
   return text.replace(/^SPEAKER:\s*(.+)$/gim, (_, name) => `${name.trim()}:`);
