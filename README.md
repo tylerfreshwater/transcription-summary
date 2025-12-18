@@ -61,7 +61,7 @@ Open `summarize_by_chunks_responses.js` and edit the **USER CONFIGURATIONS** sec
 Run the script using Node:
 
 ```bash
-node summarize_by_chunks_responses.js
+node transcribe-in-batches.js
 ```
 
 ---
