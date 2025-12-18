@@ -1,6 +1,10 @@
 # Transcript Summarizer & Expansion Script (Node.js)
 
-This Node.js utility automates the process of summarizing extremely large transcripts (specifically optimized for Dungeons & Dragons sessions) using OpenAI's Responses API. It intelligently splits text into speaker-aware chunks, enforces a minimum length for summaries, and includes a checkpointing system to resume progress after crashes or rate limits.
+This Node.js utility automates the process of summarizing extremely large transcripts using OpenAI's Responses API. It intelligently splits text into speaker-aware chunks, enforces a minimum length for summaries, and includes a checkpointing system to resume progress after crashes or rate limits.
+
+> **Note on Use Case:** This script was built specifically with the intention of summarizing **Dungeons & Dragons campaign transcripts**. The system prompts are tuned for narrative, in-world storytelling. For use with other types of content (interviews, meetings, lectures), you will need to update the `SYSTEM_PROMPT` variable within the script.
+
+---
 
 ## Key Features
 
@@ -49,7 +53,7 @@ export OPENAI_API_KEY='your_api_key_here'
 ### 2. Script Configuration
 Open `summarize_by_chunks_responses.js` and edit the **USER CONFIGURATIONS** section:
 
-* **`INPUT_TRANSCRIPT_PATH`**: Set the path to your `.txt` transcript file.
+* **`INPUT_TRANSCRIPT_PATH`**: Set the path to your file (e.g., `String.raw`C:\Users\Name\Desktop\transcription.txt``).
 * **`TARGET_CHUNK_CHARS`**: Adjust the size of the transcript segments (default 25k).
 * **`MIN_CHUNK_SUMMARY_CHARS`**: The minimum length required for a summary before an expansion pass is triggered.
 * **`MODEL`**: Set to `gpt-5.2` or your desired OpenAI model.
@@ -61,7 +65,7 @@ Open `summarize_by_chunks_responses.js` and edit the **USER CONFIGURATIONS** sec
 Run the script using Node:
 
 ```bash
-node transcribe-in-batches.js
+node summarize_by_chunks_responses.js
 ```
 
 ---
@@ -78,6 +82,8 @@ The script creates a `summaries_out` directory. Inside, it creates a folder name
 
 ## How it Works
 
+
+
 1.  **Normalization:** Converts `SPEAKER: Name` tags into a cleaner `Name:` format.
 2.  **Chunking:** Groups speaker blocks into chunks roughly the size of `TARGET_CHUNK_CHARS`.
 3.  **Summarization:** Sends chunks to OpenAI. If `BRIDGE_CHARS` is enabled, it includes the end of the previous summary for context.
@@ -86,6 +92,6 @@ The script creates a `summaries_out` directory. Inside, it creates a folder name
 
 ---
 
-## Note
+## Important Formatting Note
 
-Ensure your transcript follows the `SPEAKER: Name` format for the best chunking results. If your transcript uses a different format, you may need to adjust the `looksLikeSpeakerLine` regex in the script.
+Ensure your transcript follows the `SPEAKER: Name` format for the best chunking results. If your transcript uses a different format, you may need to adjust the `looksLikeSpeakerLine` regex in the script to ensure the logic correctly identifies speaker changes.
